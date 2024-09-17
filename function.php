@@ -28,13 +28,10 @@ function OTP2fa($secret) {
     $key = base32Decode($secret);
     $time = floor((time() + $timeOffset) / $timeStep);
 
-    // 8-byte zaman değeri
     $time = pack('N*', 0) . pack('N*', $time);
 
-    // HMAC-SHA1 hesaplama
     $hash = hash_hmac('sha1', $time, $key, true);
 
-    // Dinamik Truncation
     $offset = ord($hash[strlen($hash) - 1]) & 0xf;
     $otp = (
             ((ord($hash[$offset + 0]) & 0x7f) << 24) |
